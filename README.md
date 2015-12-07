@@ -1,3 +1,7 @@
+Note from Harshit: Added quick and dirty android socket client/server examples.
+
+Now follows original Readme from Nadia:
+
 1. Get the Android Development Environment
 http://developer.android.com/training/basics/firstapp/index.html
 
