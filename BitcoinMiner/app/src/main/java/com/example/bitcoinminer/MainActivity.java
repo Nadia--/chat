@@ -39,6 +39,8 @@ public class MainActivity extends Activity {
 	private String username;
 	private int mycolor;
 
+	private int syscolor = Color.LTGRAY;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,21 +51,49 @@ public class MainActivity extends Activity {
 		scroller = (ScrollView) findViewById(R.id.scroll);
 		overlay = (RelativeLayout) findViewById(R.id.layout_overlay);
 		login = (EditText) findViewById(R.id.username);
+
+		user_entered();
     }
 
-	public void send(View view) {
-		String msg = message.getText().toString();
-		if (msg.contentEquals("")) return;
-
-		Spannable name = new SpannableString(username + " ");
-		name.setSpan(new ForegroundColorSpan(mycolor), 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+	public void user_message(String user, int color, String msg) {
+		Spannable name = new SpannableString(user + " ");
+		name.setSpan(new ForegroundColorSpan(color), 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		name.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		log.append(name);
 		Spannable words = new SpannableString(msg + "\n");
 		words.setSpan(new ForegroundColorSpan(Color.BLACK), 0, words.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		log.append(words);
-
 		scroller.fullScroll(View.FOCUS_DOWN);
+	}
+
+	public void user_entered() {
+		Spannable welcome = new SpannableString("A new user entered.\n");
+		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		log.append(welcome);
+		scroller.fullScroll(View.FOCUS_DOWN);
+	}
+
+	public void welcome_user(String name) {
+		Spannable welcome = new SpannableString("Welcome " + name +"!\n");
+		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		log.append(welcome);
+		scroller.fullScroll(View.FOCUS_DOWN);
+	}
+
+	public void user_exitted(String name) {
+		Spannable welcome = new SpannableString(name + "left.\n");
+		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		log.append(welcome);
+		scroller.fullScroll(View.FOCUS_DOWN);
+	}
+
+	public void send(View view) {
+		String msg = message.getText().toString();
+		if (msg.contentEquals("")) return;
+		user_message(username, mycolor, msg);
 		message.setText(null);
 	}
 
@@ -76,6 +106,7 @@ public class MainActivity extends Activity {
 
 		overlay.setVisibility(View.INVISIBLE);
 		message.requestFocus();
+		welcome_user(username);
 	}
 
 	@Override
