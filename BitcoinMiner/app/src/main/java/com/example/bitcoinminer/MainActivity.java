@@ -1,5 +1,6 @@
 package com.example.bitcoinminer;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,6 +17,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +29,13 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
@@ -41,7 +50,16 @@ public class MainActivity extends Activity {
 
 	private int syscolor = Color.LTGRAY;
 
-    @Override
+	private Socket mSocket;
+	{
+		try {
+			mSocket = IO.socket("http://45.55.170.98:3000/");
+			Log.d("Uhh", "connected!");
+		} catch (URISyntaxException e) {
+		}
+	}
+
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -52,8 +70,30 @@ public class MainActivity extends Activity {
 		overlay = (RelativeLayout) findViewById(R.id.layout_overlay);
 		login = (EditText) findViewById(R.id.username);
 
+		mSocket.on("new message", onNewMessage);
+		mSocket.connect();
 		user_entered();
     }
+
+	private Emitter.Listener onNewMessage = new Emitter.Listener() {
+		@Override
+		public void call(Object... args) {
+			JSONObject data = (JSONObject) args[0];
+			String username;
+			String message;
+			try {
+				Log.d("NADIA", "trying to work");
+				username = data.getString("username");
+				message = data.getString("message");
+			} catch (JSONException e) {
+				return;
+			}
+
+			// add the message to view
+			Log.d("NADIA", "trying to work");
+			user_message(username, Color.GRAY, message);
+		}
+	};
 
 	public void user_message(String user, int color, String msg) {
 		Spannable name = new SpannableString(user + " ");
@@ -79,6 +119,8 @@ public class MainActivity extends Activity {
 		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		log.append(welcome);
+		mSocket.emit("add user", name);
+		Log.d("NADIA", "trying to add user");
 		scroller.fullScroll(View.FOCUS_DOWN);
 	}
 
@@ -95,6 +137,9 @@ public class MainActivity extends Activity {
 		if (msg.contentEquals("")) return;
 		user_message(username, mycolor, msg);
 		message.setText(null);
+
+		mSocket.emit("new message", msg);
+		Log.d("NADIA", "sending message");
 	}
 
 	public void enter_login(View view) {
@@ -122,4 +167,14 @@ public class MainActivity extends Activity {
 		login.requestFocus();
 		return true;
 	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		mSocket.disconnect();
+		mSocket.off("new message", onNewMessage);
+	}
+
 }
+
