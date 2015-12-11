@@ -1,7 +1,3 @@
-Note from Harshit: Added quick and dirty android socket client/server examples.
-
-Now follows original Readme from Nadia:
-
 1. Get the Android Development Environment
 http://developer.android.com/training/basics/firstapp/index.html
 
@@ -12,11 +8,9 @@ http://developer.android.com/training/basics/firstapp/index.html
   - (layout) BitcoinMiner\app\src\main\res\layout\activity_main.xml
   - (manifest) BitcoinMiner\app\src\main\AndroidManifest.xml
 
-4. In developer options, enable debugging on your phone (you might want to google how to do this for your model), then you can plug it into your computer and click the play button and it will install onto your phone.  I recommend this over the emulator (which is usually slow af).
-
-Extra. To add images
+4. To add images
   - BitcoinMiner\app\src\main\res\ (any drawable folder, the only difference is size)
   
-Note. I just got this basically set up so that it works and so that you can see how the code works.
+5. I just got this basically set up so that it works and so that you can see how the code works.
   Feel free to edit the layout (its meh right now) and finish the implementation counter logic stuff.  It's late, I'm tired.
   Ofc, adding the actual bitcoin mining part would also be good. 
