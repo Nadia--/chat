@@ -44,7 +44,8 @@ public class MainActivity extends Activity {
 	private Socket mSocket;
 	{
 		try {
-			mSocket = IO.socket("http://45.55.170.98:3000/");
+			//mSocket = IO.socket("http://45.55.170.98:3000/");
+			mSocket = IO.socket("http://chat.socket.io/");
 			Log.d("Uhh", "connected!");
 		} catch (URISyntaxException e) {
 		}
@@ -140,18 +141,20 @@ public class MainActivity extends Activity {
 		words.setSpan(new ForegroundColorSpan(Color.BLACK), 0, words.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		runOnUiThread(new Runnable() {
 			private Spannable name, words;
+
 			@Override
 			public void run() {
 				log.append(name);
 				log.append(words);
 				scroller.fullScroll(View.FOCUS_DOWN);
 			}
-			private Runnable init(Spannable name, Spannable words){
-				this.name=name;
-				this.words=words;
+
+			private Runnable init(Spannable name, Spannable words) {
+				this.name = name;
+				this.words = words;
 				return this;
 			}
-		}.init(name,words));
+		}.init(name, words));
 	}
 
 	public void user_entered() {
@@ -160,13 +163,15 @@ public class MainActivity extends Activity {
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		runOnUiThread(new Runnable() {
 			private Spannable welcome;
+
 			@Override
 			public void run() {
 				log.append(welcome);
 				scroller.fullScroll(View.FOCUS_DOWN);
 			}
-			private Runnable init(Spannable welcome){
-				this.welcome=welcome;
+
+			private Runnable init(Spannable welcome) {
+				this.welcome = welcome;
 				return this;
 			}
 		}.init(welcome));
@@ -176,17 +181,17 @@ public class MainActivity extends Activity {
 		Spannable welcome = new SpannableString("Welcome " + name +"!\n");
 		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		mSocket.emit("add user", name);
-		Log.d("NADIA", "trying to add user");
 		runOnUiThread(new Runnable() {
 			private Spannable welcome;
+
 			@Override
 			public void run() {
 				log.append(welcome);
 				scroller.fullScroll(View.FOCUS_DOWN);
 			}
-			private Runnable init(Spannable welcome){
-				this.welcome=welcome;
+
+			private Runnable init(Spannable welcome) {
+				this.welcome = welcome;
 				return this;
 			}
 		}.init(welcome));
@@ -198,13 +203,15 @@ public class MainActivity extends Activity {
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		runOnUiThread(new Runnable() {
 			private Spannable welcome;
+
 			@Override
 			public void run() {
 				log.append(welcome);
 				scroller.fullScroll(View.FOCUS_DOWN);
 			}
-			private Runnable init(Spannable welcome){
-				this.welcome=welcome;
+
+			private Runnable init(Spannable welcome) {
+				this.welcome = welcome;
 				return this;
 			}
 		}.init(welcome));
@@ -234,6 +241,7 @@ public class MainActivity extends Activity {
 
 		overlay.setVisibility(View.INVISIBLE);
 		message.requestFocus();
+		mSocket.emit("add user", username);
 		welcome_user(username);
 	}
 
