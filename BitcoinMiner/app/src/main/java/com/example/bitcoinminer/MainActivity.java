@@ -135,37 +135,78 @@ public class MainActivity extends Activity {
 		Spannable name = new SpannableString(user + " ");
 		name.setSpan(new ForegroundColorSpan(color), 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		name.setSpan(new StyleSpan(Typeface.BOLD), 0, name.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		log.append(name);
 		Spannable words = new SpannableString(msg + "\n");
 		words.setSpan(new ForegroundColorSpan(Color.BLACK), 0, words.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		log.append(words);
-		scroller.fullScroll(View.FOCUS_DOWN);
+		runOnUiThread(new Runnable() {
+			private Spannable name, words;
+			@Override
+			public void run() {
+				log.append(name);
+				log.append(words);
+				scroller.fullScroll(View.FOCUS_DOWN);
+			}
+			private Runnable init(Spannable name, Spannable words){
+				this.name=name;
+				this.words=words;
+				return this;
+			}
+		}.init(name,words));
 	}
 
 	public void user_entered() {
 		Spannable welcome = new SpannableString("A new user entered.\n");
 		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		log.append(welcome);
-		scroller.fullScroll(View.FOCUS_DOWN);
+		runOnUiThread(new Runnable() {
+			private Spannable welcome;
+			@Override
+			public void run() {
+				log.append(welcome);
+				scroller.fullScroll(View.FOCUS_DOWN);
+			}
+			private Runnable init(Spannable welcome){
+				this.welcome=welcome;
+				return this;
+			}
+		}.init(welcome));
 	}
 
 	public void welcome_user(String name) {
 		Spannable welcome = new SpannableString("Welcome " + name +"!\n");
 		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		log.append(welcome);
 		mSocket.emit("add user", name);
 		Log.d("NADIA", "trying to add user");
-		scroller.fullScroll(View.FOCUS_DOWN);
+		runOnUiThread(new Runnable() {
+			private Spannable welcome;
+			@Override
+			public void run() {
+				log.append(welcome);
+				scroller.fullScroll(View.FOCUS_DOWN);
+			}
+			private Runnable init(Spannable welcome){
+				this.welcome=welcome;
+				return this;
+			}
+		}.init(welcome));
 	}
 
 	public void user_exitted(String name) {
 		Spannable welcome = new SpannableString(name + "left.\n");
 		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-		log.append(welcome);
-		scroller.fullScroll(View.FOCUS_DOWN);
+		runOnUiThread(new Runnable() {
+			private Spannable welcome;
+			@Override
+			public void run() {
+				log.append(welcome);
+				scroller.fullScroll(View.FOCUS_DOWN);
+			}
+			private Runnable init(Spannable welcome){
+				this.welcome=welcome;
+				return this;
+			}
+		}.init(welcome));
 	}
 
 	public void send(View view) {
