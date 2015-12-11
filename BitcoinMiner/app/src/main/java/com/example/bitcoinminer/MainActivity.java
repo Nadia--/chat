@@ -66,6 +66,7 @@ public class MainActivity extends Activity {
 		mSocket.on("user left", onUserLeft);
 		mSocket.connect();
 		user_entered();
+		promptUsername();
     }
 
 	@Override
@@ -219,6 +220,11 @@ public class MainActivity extends Activity {
 		Log.d("NADIA", "sending message");
 	}
 
+	public void promptUsername() {
+		overlay.setVisibility(View.VISIBLE);
+		login.requestFocus();
+	}
+
 	public void enter_login(View view) {
 		username = login.getText().toString();
 		if (username.contentEquals("")) return;
@@ -240,8 +246,7 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() != R.id.menu_relog) return super.onOptionsItemSelected(item);
-		overlay.setVisibility(View.VISIBLE);
-		login.requestFocus();
+		promptUsername();
 		return true;
 	}
 
