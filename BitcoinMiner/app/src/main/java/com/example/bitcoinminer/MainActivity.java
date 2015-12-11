@@ -1,30 +1,21 @@
 package com.example.bitcoinminer;
 
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Random;
 
 
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.os.SystemClock;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -70,10 +61,40 @@ public class MainActivity extends Activity {
 		overlay = (RelativeLayout) findViewById(R.id.layout_overlay);
 		login = (EditText) findViewById(R.id.username);
 
+		//mSocket.on("login", onLogin);
 		mSocket.on("new message", onNewMessage);
+		mSocket.on("user joined", onUserJoined);
+		mSocket.on("user left", onUserLeft);
 		mSocket.connect();
 		user_entered();
     }
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+
+		mSocket.disconnect();
+		//mSocket.off("login", onLogin);
+		mSocket.off("new message", onNewMessage);
+		mSocket.off("user joined", onUserJoined);
+		mSocket.off("user left", onUserLeft);
+	}
+
+	/**
+	private Emitter.Listener onLogin = new Emitter.Listener() {
+		@Override
+		public void call(Object... args) {
+			JSONObject data = (JSONObject) args[0];
+
+			int numUsers;
+			try {
+				numUsers = data.getInt("numUsers");
+			} catch (JSONException e) {
+				return;
+			}
+		}
+	};
+	**/
 
 	private Emitter.Listener onNewMessage = new Emitter.Listener() {
 		@Override
@@ -82,7 +103,6 @@ public class MainActivity extends Activity {
 			String username;
 			String message;
 			try {
-				Log.d("NADIA", "trying to work");
 				username = data.getString("username");
 				message = data.getString("message");
 			} catch (JSONException e) {
@@ -92,6 +112,40 @@ public class MainActivity extends Activity {
 			// add the message to view
 			Log.d("NADIA", "trying to work");
 			user_message(username, Color.GRAY, message);
+		}
+	};
+
+
+	private Emitter.Listener onUserJoined = new Emitter.Listener() {
+		@Override
+		public void call(Object... args) {
+			JSONObject data = (JSONObject) args[0];
+			String username;
+			int numUsers;
+			try {
+				username = data.getString("username");
+				numUsers = data.getInt("numUsers");
+			} catch (JSONException e) {
+				return;
+			}
+			welcome_user(username);
+		}
+	};
+
+	private Emitter.Listener onUserLeft = new Emitter.Listener() {
+		@Override
+		public void call(Object... args) {
+			JSONObject data = (JSONObject) args[0];
+			String username;
+			int numUsers;
+			try {
+				username = data.getString("username");
+				numUsers = data.getInt("numUsers");
+			} catch (JSONException e) {
+				return;
+			}
+
+			user_exitted(username);
 		}
 	};
 
@@ -168,13 +222,6 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-
-		mSocket.disconnect();
-		mSocket.off("new message", onNewMessage);
-	}
 
 }
 
