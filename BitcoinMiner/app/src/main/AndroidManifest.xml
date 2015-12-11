@@ -10,13 +10,13 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/opengraph"
-        android:label="Bitcoin Miner"
+        android:icon="@drawable/chat"
+        android:label="Chatroom"
         android:screenOrientation="portrait"
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.example.bitcoinminer.MainActivity"
-            android:label="Bitcoin Miner" >
+            android:label="Chatroom" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
