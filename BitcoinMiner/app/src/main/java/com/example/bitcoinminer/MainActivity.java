@@ -61,7 +61,6 @@ public class MainActivity extends Activity {
 		overlay = (RelativeLayout) findViewById(R.id.layout_overlay);
 		login = (EditText) findViewById(R.id.username);
 
-		//mSocket.on("login", onLogin);
 		mSocket.on("new message", onNewMessage);
 		mSocket.on("user joined", onUserJoined);
 		mSocket.on("user left", onUserLeft);
@@ -74,27 +73,10 @@ public class MainActivity extends Activity {
 		super.onDestroy();
 
 		mSocket.disconnect();
-		//mSocket.off("login", onLogin);
 		mSocket.off("new message", onNewMessage);
 		mSocket.off("user joined", onUserJoined);
 		mSocket.off("user left", onUserLeft);
 	}
-
-	/**
-	private Emitter.Listener onLogin = new Emitter.Listener() {
-		@Override
-		public void call(Object... args) {
-			JSONObject data = (JSONObject) args[0];
-
-			int numUsers;
-			try {
-				numUsers = data.getInt("numUsers");
-			} catch (JSONException e) {
-				return;
-			}
-		}
-	};
-	**/
 
 	private Emitter.Listener onNewMessage = new Emitter.Listener() {
 		@Override
