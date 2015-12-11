@@ -44,9 +44,8 @@ public class MainActivity extends Activity {
 	private Socket mSocket;
 	{
 		try {
-			//mSocket = IO.socket("http://45.55.170.98:3000/");
-			mSocket = IO.socket("http://chat.socket.io/");
-			Log.d("Uhh", "connected!");
+			mSocket = IO.socket("http://45.55.170.98:3000/");
+			//mSocket = IO.socket("http://chat.socket.io/");
 		} catch (URISyntaxException e) {
 		}
 	}
@@ -65,7 +64,6 @@ public class MainActivity extends Activity {
 		mSocket.on("new message", onNewMessage);
 		mSocket.on("user joined", onUserJoined);
 		mSocket.on("user left", onUserLeft);
-		mSocket.connect();
 		user_entered();
 		promptUsername();
     }
@@ -198,7 +196,7 @@ public class MainActivity extends Activity {
 	}
 
 	public void user_exitted(String name) {
-		Spannable welcome = new SpannableString(name + "left.\n");
+		Spannable welcome = new SpannableString(name + " left.\n");
 		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 		runOnUiThread(new Runnable() {
@@ -215,6 +213,22 @@ public class MainActivity extends Activity {
 				return this;
 			}
 		}.init(welcome));
+	}
+
+	public void you_joined() {
+		Spannable welcome = new SpannableString("You've connected as " + username +"!\n");
+		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		log.append(welcome);
+		scroller.fullScroll(View.FOCUS_DOWN);
+	}
+
+	public void you_left() {
+		Spannable welcome = new SpannableString("You've disconnected!\n");
+		welcome.setSpan(new ForegroundColorSpan(syscolor), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		welcome.setSpan(new StyleSpan(Typeface.ITALIC), 0, welcome.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+		log.append(welcome);
+		scroller.fullScroll(View.FOCUS_DOWN);
 	}
 
 	public void send(View view) {
@@ -241,7 +255,9 @@ public class MainActivity extends Activity {
 
 		overlay.setVisibility(View.INVISIBLE);
 		message.requestFocus();
+		mSocket.connect();
 		mSocket.emit("add user", username);
+		you_joined();
 		welcome_user(username);
 	}
 
@@ -254,6 +270,9 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() != R.id.menu_relog) return super.onOptionsItemSelected(item);
+		user_exitted(username);
+		mSocket.disconnect();
+		you_left();
 		promptUsername();
 		return true;
 	}
