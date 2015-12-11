@@ -49,7 +49,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:hint="type message"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:layout_gravity=""/>
 
             <ImageButton
