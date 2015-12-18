@@ -14,6 +14,8 @@ http://developer.android.com/training/basics/firstapp/index.html
 
 5. If not, take the server code and host it somewhere. Put in the address for your server in MainActivity.java.
 
-6. Build the project and run it on a phone or emulator.
+6. The server written in node.js requires express.
 
-7. Chat!
+7. Build the project and run it on a phone or emulator.
+
+8. Chat!
